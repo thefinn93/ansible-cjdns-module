@@ -77,8 +77,12 @@ def main():
             facts['public_key'] = cjdroute['publicKey']
         facts['UDPInterface'] = []
         for interface in cjdroute['interfaces']['UDPInterface']:
-            bind = interface['bind'].split(":") # This is gonna break on IPv6 addresses
-            facts['UDPInterface']
+            bind = interface['bind'].split(":")  # This is gonna break on IPv6
+            udpiffact = {
+                "port": bind[-1],
+                "host": ":".join(bind[0:-1])    # This should handle IPv6 shit
+            }
+            facts['UDPInterface'].append(udpiffact)
         if changed:
             with open(params['cjdroute'], 'w') as cjdroutefile:
                 json.dump(cjdroute, cjdroutefile, indent=4,
