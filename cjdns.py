@@ -18,6 +18,7 @@ def main():
         import cjdnsadmin
         params = module.params
         cjdroute = json.load(open(params['cjdroute']))
+        cjdns = cjdnsadmin.connect('127.0.0.1', 11234, cjdroute['admin']['password'])
         if params['authorizedPassword'] is not None:
             if not 'user' in params['authorizedPassword']:
                 module.fail_json(msg='No user specified')
@@ -38,6 +39,10 @@ def main():
                             changed = True
                     else:
                         cjdroute['authorizedPasswords'].append(params['authorizedPassword'])
+                        ipv6 = 0
+                        if 'ipv6' in params['authorizedPassword']:
+                            ipv6 = params['authorizedPassword']['ipv6']
+                        cjdns.AuthorizedPasswords_add(params['authorizedPassword']['password'], params['authorizedPassword']['user'], ipv6=ipv6)
                         changed = True
                 if params['state'] == 'absent' and position is not None:
                     cjdroute['authorizedPasswords'].pop(i)
