@@ -45,7 +45,7 @@ def main():
                         cjdns.AuthorizedPasswords_add(params['authorizedPassword']['password'], params['authorizedPassword']['user'], ipv6=ipv6)
                         changed = True
                 if params['state'] == 'absent' and position is not None:
-                    cjdroute['authorizedPasswords'].pop(i)
+                    cjdroute['authorizedPasswords'].pop(position)
                     cjdns.AuthorizedPasswords_remove(params['authorizedPassword']['user'])
                     changed = True
         facts = {}
