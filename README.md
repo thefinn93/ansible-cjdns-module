@@ -1,6 +1,6 @@
 # Ansible cjdns module
 
-A cjdns module to configure cjdns. Currently implemented are gathering of a few
+An ansible module to configure cjdns. Currently implemented are gathering of a few
 key facts (cjdns IP and public key) and adding or removing AuthorizedPasswords.
 Documentation will follow eventually, for now see `cjdns.yml`. Note that the
 [cjdnsadmin](https://pypi.python.org/pypi/cjdnsadmin) library must be installed.
