@@ -22,7 +22,7 @@ def main():
         if params['authorizedPassword'] is not None:
             if not 'user' in params['authorizedPassword']:
                 module.fail_json(msg='No user specified')
-            elif not 'password' in params['authorizedPassword']:
+            elif not 'password' in params['authorizedPassword'] and param['state'] == 'present':
                 module.fail_json(msg='No password specified')
             else:
                 position = None
@@ -46,6 +46,7 @@ def main():
                         changed = True
                 if params['state'] == 'absent' and position is not None:
                     cjdroute['authorizedPasswords'].pop(i)
+                    cjdns.AuthorizedPasswords_remove(params['authorizedPassword']['user'])
                     changed = True
         facts = {}
         if "ipv6" in cjdroute:
