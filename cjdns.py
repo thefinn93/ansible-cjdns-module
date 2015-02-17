@@ -28,7 +28,9 @@ def main():
             else:
                 position = None
                 for i in range(0, len(cjdroute['authorizedPasswords'])):
-                    if cjdroute['authorizedPasswords'][i]['password'] == params['authorizedPassword']['password'] or cjdroute['authorizedPasswords'][i]['user'] == params['authorizedPassword']['user']:
+                    passwordmatches = cjdroute['authorizedPasswords'][i]['password'] == params['authorizedPassword']['password']
+                    usermatches = cjdroute['authorizedPasswords'][i]['user'] == params['authorizedPassword']['user']
+                    if passwordmatches or usermatches:
                         position = i
                 if params['state'] == 'present':
                     if position is not None:
@@ -43,7 +45,9 @@ def main():
                         ipv6 = 0
                         if 'ipv6' in params['authorizedPassword']:
                             ipv6 = params['authorizedPassword']['ipv6']
-                        cjdns.AuthorizedPasswords_add(params['authorizedPassword']['password'], params['authorizedPassword']['user'], ipv6=ipv6)
+                        cjdns.AuthorizedPasswords_add(params['authorizedPassword']['password'],
+                                                      params['authorizedPassword']['user'],
+                                                      ipv6=ipv6)
                         changed = True
                 if params['state'] == 'absent' and position is not None:
                     cjdroute['authorizedPasswords'].pop(position)
