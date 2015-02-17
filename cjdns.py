@@ -9,7 +9,7 @@ def main():
             authorizedPassword=dict(required=False),
             cjdroute=dict(required=False, default='/etc/cjdroute.conf'),
             autoclean=dict(requird=False, type='bool', default=True),
-            udppeers=dict(required=False),
+            udppeer=dict(required=False),
             state=dict(default='present', choices=['present', 'absent']),
         )
     )
@@ -55,28 +55,26 @@ def main():
                     cjdroute['authorizedPasswords'].pop(position)
                     cjdns.AuthorizedPasswords_remove(params['authorizedPassword']['user'])
                     changed = True
-        if params['udppeers'] is not None:
-            for peer in params['udppeers']:
-                if params['state'] == 'absent':
-                    if peer in cjdroute['interfaces']['UDPInterface'][0]['connectTo']:
-                        del cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer]
-                        changed = True
-                elif params['state'] == 'present':
-                    if peer in cjdroute['interfaces']['UDPInterface'][0]['connectTo']:
-                        for key in params['udppeers'][peer]:
-                            if key in cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer]:
-                                if params['udppeers'][peer][key] != cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer][key]:
-                                    cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer][key] = params['udppeers'][peer][key]
-                                    changed = True
-                            else:
-                                cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer][key] = params['udppeers'][peer][key]
+        if params['udppeer'] is not None:
+            if params['state'] == 'absent':
+                if params['udppeer']['address'] in cjdroute['interfaces']['UDPInterface'][0]['connectTo']:
+                    del cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']]
+                    changed = True
+            elif params['state'] == 'present':
+                if params['udppeer']['address'] in cjdroute['interfaces']['UDPInterface'][0]['connectTo']:
+                    for key in params['udppeer']['data']:
+                        if key in cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']]:
+                            if params['udppeer']['data'][key] != cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']][key]:
+                                cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']][key] = params['udppeer']['data'][key]
                                 changed = True
-                    else:
-                        cjdroute['interfaces']['UDPInterface'][0]['connectTo'][peer] = params['udppeers'][peer]
-                        cjdns.UDPInterface_beginConnection(
-                            params['udppeers'][peer]['publicKey'],
-                            peer, password=params['udppeers'][peer]['password'])
-                        changed = True
+                        else:
+                            cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']][key] = params['udppeer']['data'][key]
+                            changed = True
+                else:
+                    cjdroute['interfaces']['UDPInterface'][0]['connectTo'][params['udppeer']['address']] = params['udppeer']['data']
+                    cjdns.UDPInterface_beginConnection(
+                        params['udppeer']['data']['publicKey'], params['udppeer']['address'], password=params['udppeer']['data']['password'])
+                    changed = True
         facts = {}
         if "ipv6" in cjdroute:
             facts['ip'] = cjdroute['ipv6']
