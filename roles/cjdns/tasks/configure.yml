@@ -1,0 +1,12 @@
+---
+  - name: generate a configuration file
+    shell: /usr/sbin/cjdroute --genconf | /usr/sbin/cjdroute --cleanconf > /etc/cjdroute.conf creates=/etc/cjdroute.conf
+    notify:
+      - restart cjdns
+  - name: Add an AuthorizedPassword
+    cjdns:
+      authorizedPassword:
+        user: "{{ item }}"
+        password: "{{ lookup('password', 'AuthorizedPasswords/' + ansible_hostname + '/' + item, length=30) }}"
+      state: present
+    with_items: play_hosts

@@ -1,16 +1,5 @@
 ---
-- hosts: munin
+- hosts: cjdns
   user: root
-  tasks:
-    - name: Install cjdnsadmin via pip
-      pip: name=cjdnsadmin state=latest
-    - name: Gather cjdns info
-      cjdns: state=present
-    - name: Display cjdns's facts
-      debug: var=hostvars[inventory_hostname]['cjdns']
-    - name: Add a password
-      cjdns:
-        authorizedPassword:
-          user: Topkek
-          password: lel
-        state: present
+  roles:
+    - cjdns

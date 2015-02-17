@@ -1,0 +1,5 @@
+---
+  - name: rebuild cjdns
+    command: ./do chdir=/usr/local/src/cjdns
+  - name: restart cjdns
+    service: name=cjdns state=restarted

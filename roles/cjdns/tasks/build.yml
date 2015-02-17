@@ -1,0 +1,23 @@
+---
+  - name: Install depends
+    apt: name={{ item }} state=installed
+    with_items:
+      - git
+      - build-essential
+      - python-pip
+  - name: Install cjdnsadmin via pip
+    pip: name=cjdnsadmin state=latest
+  - name: Grab the cjdns repo
+    git: repo=https://github.com/cjdelisle/cjdns dest=/usr/local/src/cjdns
+  - name: Install the post-merge hook to automatically rebuild and restart
+    template: src=cjdns-post-merge.j2 dest=/usr/local/src/cjdns/.git/hooks/post-merge
+  - name: Set the executable bit on the post-merge hook
+    file: path=/usr/local/src/cjdns/.git/hooks/post-merge mode=755
+  - name: build cjdns if this is our first time
+    command: ./do chdir=/usr/local/src/cjdns creates=/usr/local/src/cjdns/cjdroute
+  - name: Put cjdroute in the $PATH
+    file: src=/usr/local/src/cjdns/cjdroute dest=/usr/sbin/cjdroute state=link force=yes
+  - name: Install the systmed service
+    template: src=cjdns.service.j2 dest=/etc/systemd/system/cjdns.service
+  - name: Enable cjdns service
+    service: name=cjdns enabled=yes
