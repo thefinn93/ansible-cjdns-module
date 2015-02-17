@@ -9,7 +9,7 @@ def main():
             authorizedPassword=dict(required=False),
             cjdroute=dict(required=False, default='/etc/cjdroute.conf'),
             autoclean=dict(requird=False, type='bool', default=True),
-            udppeers=dict(required=False, type='DictType'),
+            udppeers=dict(required=False),
             state=dict(default='present', choices=['present', 'absent']),
         )
     )
