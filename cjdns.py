@@ -29,7 +29,9 @@ def main():
                 position = None
                 for i in range(0, len(cjdroute['authorizedPasswords'])):
                     passwordmatches = cjdroute['authorizedPasswords'][i]['password'] == params['authorizedPassword']['password']
-                    usermatches = cjdroute['authorizedPasswords'][i]['user'] == params['authorizedPassword']['user']
+                    usermatches = False
+                    if 'user' in cjdroute['authorizedPasswords'][i]:
+                        usermatches = cjdroute['authorizedPasswords'][i]['user'] == params['authorizedPassword']['user']
                     if passwordmatches or usermatches:
                         position = i
                 if params['state'] == 'present':
@@ -95,8 +97,8 @@ def main():
         module.exit_json(changed=changed, ansible_facts={"cjdns": facts})
     except ImportError:
         module.fail_json(msg='Please install the cjdnsadmin python library')
-    except IOError:
-        module.fail_json(msg='Failed to open cjdroute.conf')
+    except IOError as e:
+        module.fail_json(msg='Failed to open cjdroute.conf: %s' % e)
 
 # import module snippets
 from ansible.module_utils.basic import *
