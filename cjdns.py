@@ -32,11 +32,11 @@ def main():
                         position = i
                 if params['state'] == 'present':
                     if position is not None:
-                        if cjdroute['authorizedPasswords'][i]['user'] != params['authorizedPassword']['user']:
-                            cjdroute['authorizedPasswords'][i]['user'] = params['authorizedPassword']['user']
+                        if cjdroute['authorizedPasswords'][position]['user'] != params['authorizedPassword']['user']:
+                            cjdroute['authorizedPasswords'][position]['user'] = params['authorizedPassword']['user']
                             changed = True
-                        if cjdroute['authorizedPasswords'][i]['password'] != params['authorizedPassword']['password']:
-                            cjdroute['authorizedPasswords'][i]['password'] = params['authorizedPassword']['password']
+                        if cjdroute['authorizedPasswords'][position]['password'] != params['authorizedPassword']['password']:
+                            cjdroute['authorizedPasswords'][position]['password'] = params['authorizedPassword']['password']
                             changed = True
                     else:
                         cjdroute['authorizedPasswords'].append(params['authorizedPassword'])
