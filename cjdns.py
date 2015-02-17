@@ -18,11 +18,12 @@ def main():
         import cjdnsadmin
         params = module.params
         cjdroute = json.load(open(params['cjdroute']))
-        cjdns = cjdnsadmin.connect('127.0.0.1', 11234, cjdroute['admin']['password'])
+        cjdns = cjdnsadmin.connect('127.0.0.1',
+                                   11234, cjdroute['admin']['password'])
         if params['authorizedPassword'] is not None:
             if not 'user' in params['authorizedPassword']:
                 module.fail_json(msg='No user specified')
-            elif not 'password' in params['authorizedPassword'] and param['state'] == 'present':
+            elif not 'password' in params['authorizedPassword'] and params['state'] == 'present':
                 module.fail_json(msg='No password specified')
             else:
                 position = None
