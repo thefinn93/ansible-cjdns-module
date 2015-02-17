@@ -10,6 +10,7 @@
         password: "{{ lookup('password', 'AuthorizedPasswords/' + ansible_hostname + '/' + item, length=30) }}"
       state: present
     with_items: play_hosts
+    when: item != inventory_hostname
   - name: Iniate peering
     cjdns:
       udppeer:
@@ -17,7 +18,8 @@
         data:
           publicKey: "{{ hostvars[item]['cjdns']['public_key'] }}"
           password: "{{ lookup('password', 'AuthorizedPasswords/' + item + '/' + ansible_hostname, length=30) }}"
+          hostname: "{{ hostvars[item]['ansible_hostname']}}"
           info: "Automatically added by ansible"
       state: present
-    # when: item != ansible_hostname # TODO: figure out how to exclude self
     with_items: play_hosts
+    when: item != inventory_hostname
