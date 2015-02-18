@@ -8,7 +8,7 @@ It can either be copied out of the cjdns `contrib/python` folder.
 
 Sample `cjdns.yml` invocation:
 
-    ANSIBLE_LIBRARY=. ansible-playbook cjdns.yml
+    ansible-playbook cjdns.yml
 
 
 *I have no idea how to package an ansible module. This is
