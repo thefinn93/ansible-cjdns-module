@@ -7,7 +7,7 @@
     cjdns:
       authorizedPassword:
         user: "{{ item }}"
-        password: "{{ lookup('password', 'AuthorizedPasswords/' + ansible_hostname + '/' + item, length=30) }}"
+        password: "{{ lookup('password', 'AuthorizedPasswords/' + inventory_hostname + '/' + item, length=30) }}"
       state: present
     with_items: play_hosts
     when: item != inventory_hostname
@@ -17,7 +17,7 @@
         address: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}:{{ hostvars[item]['cjdns']['UDPInterface'][0]['port']}}"
         data:
           publicKey: "{{ hostvars[item]['cjdns']['public_key'] }}"
-          password: "{{ lookup('password', 'AuthorizedPasswords/' + item + '/' + ansible_hostname, length=30) }}"
+          password: "{{ lookup('password', 'AuthorizedPasswords/' + item + '/' + inventory_hostname, length=30) }}"
           hostname: "{{ hostvars[item]['ansible_hostname']}}"
           info: "Automatically added by ansible"
       state: present
